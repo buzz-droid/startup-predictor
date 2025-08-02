@@ -228,14 +228,11 @@
     </main>
 
     <script>
-        // Store user data
+     
         const userData = {};
 
-        // Keep track of the current page
         let currentPage = 1;
 
-        // The URL of your deployed Render backend.
-        //!!! YOU MUST REPLACE THIS PLACEHOLDER WITH YOUR ACTUAL RENDER URL!!!
         const BACKEND_URL = 'YOUR_RENDER_BACKEND_URL';
         
         function showPage() {
@@ -290,7 +287,6 @@
             document.getElementById('predict-button-text').textContent = "Predicting...";
             document.getElementById('predict-loading').classList.remove('hidden');
 
-            // Store final user data
             userData.age = parseInt(document.getElementById('age').value);
             userData.employees = parseInt(document.getElementById('employees').value);
             userData.industry = document.getElementById('industry').value;
@@ -299,7 +295,6 @@
             userData.marketingExpense = parseFloat(document.getElementById('marketing_expense').value);
 
             try {
-                // Send data to the backend API for prediction
                 const response = await fetch(`${BACKEND_URL}/predict`, {
                     method: 'POST',
                     headers: {
@@ -313,7 +308,7 @@
                 }
                 
                 const result = await response.json();
-                runPrediction(result); // Display the result from the backend
+                runPrediction(result); 
 
             } catch (error) {
                 console.error("Failed to fetch prediction:", error);
@@ -339,7 +334,6 @@
             }
         }
 
-        // The core prediction logic, now a separate function that displays the backend's response
         function runPrediction(result) {
             const { prediction, probability, advice } = result;
 
