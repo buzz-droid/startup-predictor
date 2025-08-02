@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Success Predictor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+       .form-label {
+            font-weight: 500;
+            color: #1f2937;
+        }
+       .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background-color: #ffffff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+       .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+       .gradient-button {
+            background: linear-gradient(to right, #3b82f6, #6366f1);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+       .gradient-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+       .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+       .page {
+            display: none;
+        }
+       .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+       .loading-spinner {
+            border-width: 4px;
+            border-style: solid;
+            border-color: #e2e8f0;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8 flex items-center justify-center min-h-screen">
+
+    <main class="w-full max-w-4xl space-y-8">
+        <div class="card p-8 sm:p-12">
+            <header class="text-center mb-10">
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">Startup Success Predictor</h1>
+                <p id="sub-heading" class="text-lg text-gray-600">Step 1: Sign up to get started.</p>
+            </header>
+
+            <div id="multi-page-form">
+
+                <div id="page-1" class="page active">
+                    <form id="signup-form" class="space-y-6">
+                        <div>
+                            <label for="email" class="form-label mb-2 block">Email Address</label>
+                            <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
+                        </div>
+                        <div>
+                            <label for="password" class="form-label mb-2 block">Password</label>
+                            <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                        </div>
+                        <div class="flex justify-center mt-8">
+                            <button type="submit" class="gradient-button flex items-center justify-center space-x-2">
+                                <span id="signup-button-text">Sign Up and Start</span>
+                                <div id="signup-loading" class="loading-spinner hidden"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="page-2" class="page">
+                    <form id="financial-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="funding" class="form-label mb-2 block">Total Funding (USD)</label>
+                                <input type="number" id="funding" class="form-input" placeholder="e.g., 5000000" min="0" required>
+                            </div>
+                            <div>
+                                <label for="burn_rate" class="form-label mb-2 block">Monthly Burn Rate (USD)</label>
+                                <input type="number" id="burn_rate" class="form-input" placeholder="e.g., 50000" min="0" required>
+                            </div>
+                        </div>
+                        <div class="flex justify-between mt-8">
+                            <button type="button" onclick="prevPage()" class="px-6 py-2 text-gray-600 rounded-lg transition hover:text-gray-900">Back</button>
+                            <button type="submit" class="gradient-button">Next: Team Details</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="page-3" class="page">
+                    <form id="team-market-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="founders" class="form-label mb-2 block">Number of Founders</label>
+                                <input type="number" id="founders" class="form-input" placeholder="e.g., 2" min="1" required>
+                            </div>
+                            <div>
+                                <label for="founder_experience" class="form-label mb-2 block">Founder has Previous Startup Experience</label>
+                                <select id="founder_experience" class="form-input" required>
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="founder_degree" class="form-label mb-2 block">Highest Founder Degree</label>
+                                <select id="founder_degree" class="form-input" required>
+                                    <option value="Bachelor">Bachelor</option>
+                                    <option value="Master">Master</option>
+                                    <option value="PhD">PhD</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="market_size" class="form-label mb-2 block">Target Market Size</label>
+                                <select id="market_size" class="form-input" required>
+                                    <option value="Small">Small</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Large">Large</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex justify-between mt-8">
+                            <button type="button" onclick="prevPage()" class="px-6 py-2 text-gray-600 rounded-lg transition hover:text-gray-900">Back</button>
+                            <button type="submit" class="gradient-button">Next: Operational Details</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="page-4" class="page">
+                    <form id="operational-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="age" class="form-label mb-2 block">Company Age (in months)</label>
+                                <input type="number" id="age" class="form-input" placeholder="e.g., 18" min="0" required>
+                            </div>
+                            <div>
+                                <label for="employees" class="form-label mb-2 block">Number of Employees</label>
+                                <input type="number" id="employees" class="form-input" placeholder="e.g., 15" min="1" required>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="industry" class="form-label mb-2 block">Industry</label>
+                                <select id="industry" class="form-input" required>
+                                    <option value="">Select an Industry</option>
+                                    <option value="Software">Software</option>
+                                    <option value="Biotechnology">Biotechnology</option>
+                                    <option value="E-commerce">E-commerce</option>
+                                    <option value="FinTech">FinTech</option>
+                                    <option value="AI/ML">AI/ML</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="business_model" class="form-label mb-2 block">Business Model</label>
+                                <select id="business_model" class="form-input" required>
+                                    <option value="B2C">B2C</option>
+                                    <option value="B2B">B2B</option>
+                                    <option value="Both">Both</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="customer_retention" class="form-label mb-2 block">Customer Retention Rate (%)</label>
+                                <input type="number" id="customer_retention" class="form-input" placeholder="e.g., 75" min="0" max="100" required>
+                            </div>
+                            <div>
+                                <label for="marketing_expense" class="form-label mb-2 block">Marketing Expense (USD)</label>
+                                <input type="number" id="marketing_expense" class="form-input" placeholder="e.g., 10000" min="0" required>
+                            </div>
+                        </div>
+                        <div class="flex justify-between mt-8">
+                            <button type="button" onclick="prevPage()" class="px-6 py-2 text-gray-600 rounded-lg transition hover:text-gray-900">Back</button>
+                            <button type="submit" class="gradient-button flex items-center justify-center space-x-2">
+                                <span id="predict-button-text">Predict Outcome</span>
+                                <div id="predict-loading" class="loading-spinner hidden"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="page-5" class="page">
+                    <div id="results-container">
+                        <div id="prediction-result" class="text-center mb-6"></div>
+                        <div id="advice-content" class="text-gray-700 space-y-4"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Store user data
+        const userData = {};
+
+        // Keep track of the current page
+        let currentPage = 1;
+
+        // The URL of your deployed Render backend.
+        //!!! YOU MUST REPLACE THIS PLACEHOLDER WITH YOUR ACTUAL RENDER URL!!!
+        const BACKEND_URL = 'YOUR_RENDER_BACKEND_URL';
+        
+        function showPage() {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(`page-${currentPage}`).classList.add('active');
+            document.getElementById('sub-heading').textContent = `Step ${currentPage}: ${getSubHeading()}`;
+        }
+        
+        function getSubHeading() {
+            switch(currentPage) {
+                case 1: return "Sign up to get started.";
+                case 2: return "Enter your startup's financial details.";
+                case 3: return "Tell us about your team and market.";
+                case 4: return "Provide key operational details.";
+                case 5: return "Here is your prediction and advice.";
+                default: return "";
+            }
+        }
+
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            document.getElementById('signup-button-text').textContent = "Signing Up...";
+            document.getElementById('signup-loading').classList.remove('hidden');
+
+            setTimeout(() => {
+                document.getElementById('signup-button-text').textContent = "Sign Up and Start";
+                document.getElementById('signup-loading').classList.add('hidden');
+                nextPage();
+            }, 1000);
+        });
+
+        document.getElementById('financial-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            userData.funding = parseFloat(document.getElementById('funding').value);
+            userData.burnRate = parseFloat(document.getElementById('burn_rate').value);
+            nextPage();
+        });
+
+        document.getElementById('team-market-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            userData.founders = parseInt(document.getElementById('founders').value);
+            userData.founderExperience = document.getElementById('founder_experience').value;
+            userData.founderDegree = document.getElementById('founder_degree').value;
+            userData.marketSize = document.getElementById('market_size').value;
+            nextPage();
+        });
+        
+        document.getElementById('operational-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            document.getElementById('predict-button-text').textContent = "Predicting...";
+            document.getElementById('predict-loading').classList.remove('hidden');
+
+            // Store final user data
+            userData.age = parseInt(document.getElementById('age').value);
+            userData.employees = parseInt(document.getElementById('employees').value);
+            userData.industry = document.getElementById('industry').value;
+            userData.businessModel = document.getElementById('business_model').value;
+            userData.customerRetention = parseFloat(document.getElementById('customer_retention').value);
+            userData.marketingExpense = parseFloat(document.getElementById('marketing_expense').value);
+
+            try {
+                // Send data to the backend API for prediction
+                const response = await fetch(`${BACKEND_URL}/predict`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                runPrediction(result); // Display the result from the backend
+
+            } catch (error) {
+                console.error("Failed to fetch prediction:", error);
+                alert("An error occurred. Please try again later.");
+            } finally {
+                document.getElementById('predict-button-text').textContent = "Predict Outcome";
+                document.getElementById('predict-loading').classList.add('hidden');
+                nextPage();
+            }
+        });
+
+        function nextPage() {
+            if (currentPage < 5) {
+                currentPage++;
+                showPage();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage();
+            }
+        }
+
+        // The core prediction logic, now a separate function that displays the backend's response
+        function runPrediction(result) {
+            const { prediction, probability, advice } = result;
+
+            const predictionResult = document.getElementById('prediction-result');
+            const adviceContent = document.getElementById('advice-content');
+
+            const outcomeColor = prediction === 'Success'? 'text-green-600' : 'text-red-600';
+            const outcomeText = prediction === 'Success'? 'Successful' : 'At Risk of Failure';
+
+            predictionResult.innerHTML = `
+                <p class="text-xl font-bold ${outcomeColor}">${outcomeText}</p>
+                <p class="text-lg text-gray-500 mt-1">Probability: ${Math.round(probability)}%</p>
+            `;
+            adviceContent.innerHTML = advice;
+        }
+
+        document.addEventListener('DOMContentLoaded', showPage);
+    </script>
+</body>
+</html>
